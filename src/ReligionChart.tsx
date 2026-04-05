@@ -205,15 +205,15 @@ export default function ReligionChart() {
   const [selectedReligions, setSelectedReligions] = useState(
     RELIGIONS.map((r) => r.id)
   );
-  const [viewMode, setViewMode] = useState("chart"); // chart | timeline | followers
-  const [hoveredRow, setHoveredRow] = useState(null);
+  const [viewMode, setViewMode] = useState("chart");
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [animReady, setAnimReady] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setAnimReady(true), 100);
   }, []);
 
-  const toggleReligion = (id) => {
+  const toggleReligion = (id: string) => {
     setSelectedReligions((prev) =>
       prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]
     );
@@ -234,9 +234,9 @@ export default function ReligionChart() {
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;400;600;700&display=swap');
-        
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+
         .fade-in {
           opacity: 0;
           transform: translateY(20px);
@@ -245,14 +245,14 @@ export default function ReligionChart() {
         @keyframes fadeUp {
           to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .bar-animate {
           animation: growBar 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         @keyframes growBar {
           from { width: 0; }
         }
-        
+
         .symbol-float {
           animation: float 6s ease-in-out infinite;
         }
@@ -260,7 +260,7 @@ export default function ReligionChart() {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-8px); }
         }
-        
+
         .tab-btn {
           padding: 10px 24px;
           border: 1px solid rgba(255,255,255,0.15);
@@ -283,7 +283,7 @@ export default function ReligionChart() {
           background: rgba(255,255,255,0.05);
           color: #ccc;
         }
-        
+
         .religion-toggle {
           display: inline-flex;
           align-items: center;
@@ -306,14 +306,14 @@ export default function ReligionChart() {
         .religion-toggle:hover {
           background: rgba(255,255,255,0.06);
         }
-        
+
         .chart-row {
           transition: background 0.2s;
         }
         .chart-row:hover {
           background: rgba(255,255,255,0.03);
         }
-        
+
         .timeline-dot {
           transition: transform 0.3s, box-shadow 0.3s;
         }
@@ -321,7 +321,7 @@ export default function ReligionChart() {
           transform: scale(1.4);
           box-shadow: 0 0 20px var(--tc);
         }
-        
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
@@ -335,7 +335,7 @@ export default function ReligionChart() {
       }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 1400, margin: "0 auto", padding: "0 24px" }}>
-        
+
         {/* Header */}
         <header className="fade-in" style={{
           padding: "60px 0 40px",
@@ -373,7 +373,7 @@ export default function ReligionChart() {
             <button
               key={r.id}
               className={`religion-toggle ${selectedReligions.includes(r.id) ? "active" : ""}`}
-              style={{ "--rc": r.color }}
+              style={{ "--rc": r.color } as React.CSSProperties}
               onClick={() => toggleReligion(r.id)}
             >
               <span style={{ fontSize: 16 }}>{r.symbol}</span>
@@ -445,7 +445,7 @@ export default function ReligionChart() {
                 </tr>
               </thead>
               <tbody>
-                {CATEGORIES.map((cat, ci) => (
+                {CATEGORIES.map((cat) => (
                   <tr
                     key={cat.key}
                     className="chart-row"
@@ -475,7 +475,7 @@ export default function ReligionChart() {
                         borderLeft: `2px solid ${r.color}15`,
                         verticalAlign: "top",
                       }}>
-                        {r[cat.key]}
+                        {r[cat.key as keyof typeof r]}
                       </td>
                     ))}
                   </tr>
@@ -556,7 +556,7 @@ export default function ReligionChart() {
                 height: 1,
                 background: "rgba(255,255,255,0.12)",
               }} />
-              
+
               {/* Era labels */}
               {[
                 { label: "紀元前2000年", x: "0%" },
@@ -592,7 +592,7 @@ export default function ReligionChart() {
                 const range = maxYear - minYear;
                 const xPercent = ((r.foundedYear - minYear) / range) * 80;
                 const yOffset = 80 + (i % 3) * 70;
-                
+
                 return (
                   <div
                     key={r.id}
@@ -634,7 +634,7 @@ export default function ReligionChart() {
                         alignItems: "center",
                         justifyContent: "center",
                         fontSize: 10,
-                      }}
+                      } as React.CSSProperties}
                     />
                     {/* Connector line */}
                     <div style={{
